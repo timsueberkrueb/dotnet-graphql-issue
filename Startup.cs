@@ -24,6 +24,8 @@ using Example.GraphQL.Ext;
 
 namespace backend
 {
+    using GraphQL.Utilities;
+
     public class Startup
     {
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -41,8 +43,8 @@ namespace backend
             });
 
             // FIXME: See https://github.com/graphql-dotnet/graphql-dotnet/issues/1161#issuecomment-540306485
-            services.AddScoped<IDependencyResolver>(
-                provider => new FuncDependencyResolver(provider.GetRequiredService));
+            services.AddScoped<IServiceProvider>(
+                provider => new FuncServiceProvider(provider.GetRequiredService));
             services.AddScoped<ISchema, GraphQLSchema>();
 
             services.AddSingleton<IModelData, ModelData>();
@@ -82,7 +84,7 @@ namespace backend
             app.UseGraphQLWebSockets<ISchema>("/graphql");
 
             // use graphql-playground at default url /ui/playground
-            app.UseGraphiQLServer(new GraphiQLOptions { GraphiQLPath = "/graphiql", GraphQLEndPoint = "/graphql" });
+            app.UseGraphiQLServer(new GraphiQLOptions { Path = "/graphiql", GraphQLEndPoint = "/graphql" });
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
 
             app.Run(async (context) =>

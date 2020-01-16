@@ -12,11 +12,11 @@ namespace Example.GraphQL.Ext
 {
     public class GraphQLSchema : Schema
     {
-        public GraphQLSchema(IDependencyResolver resolver)
-            : base(resolver)
+        public GraphQLSchema(IServiceProvider provider)
+            : base(provider)
         {
-            Query = resolver.Resolve<QueryType>();
-            Mutation = resolver.Resolve<MutationType>();
+            Query = provider.GetService<QueryType>();
+            Mutation = provider.GetService<MutationType>();
         }
     }
 }
